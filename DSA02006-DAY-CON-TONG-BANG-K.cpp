@@ -1,48 +1,62 @@
-#include<bits/stdc++.h>
+//DSA02026
+#include <bits/stdc++.h>
 
-#define mp make_pair
-#define F first
-#define S second
 using namespace std;
+int n, k;
+vector<int> a;
+bool check;
 
-typedef long long ll;
-
-void prepare()
+void Try(int vt, int sum, string s)
 {
-
-}
-
-void init()
-{
-
-}
-
-void solve()
-{
-    int n;
-    ll k;
-    cin >> n >> k;
-    vector<ll> a(n+1);
-    for(int i = 1; i <= n; i++) 
+    if (sum > k)
+        return;
+    if (vt == n)
     {
-        ll so;
-        cin >> so;
-        a[i] = a[i-1]+so;
-    }
-    for(int i = 1; i <= n ;i++)
-    {
-        int it = lower_bound(a.begin(), a.end(), a[i]-k) - a.begin();
-        if (it <= n && it!= i && a[i]-a[it] == k)
+        if (sum == k)
         {
-            cout << "YES\n";
-            return;
+            bool ok = 0;
+            cout << '[';
+            for (int i = 0; i < s.length(); i++)
+            {
+                if (s[i] == '1')
+                {
+                    if (ok)
+                        cout << ' ';
+                    cout << a[i];
+                    ok = 1;
+                }
+                else
+                    continue;
+            }
+            cout << "] ";
+            check = 1;
         }
+        return;
     }
-    cout << "NO\n";
+    for (char i = '1'; i >= '0'; i--)
+    {
+        if (i == '0')
+            Try(vt + 1, sum, s + i);
+        else
+            Try(vt + 1, sum + a[vt], s + i);
+    }
 }
+
 int main()
 {
-    int t = 1;
-    cin >> t;
-    while (t--) solve();
+    int T;
+    cin >> T;
+    while (T--)
+    {
+        cin >> n >> k;
+        a.resize(n);
+        check = 0;
+        for (int i = 0; i < n; i++)
+            cin >> a[i];
+        sort(a.begin(), a.end());
+        Try(0, 0, "");
+        if (check == 0)
+            cout << -1;
+        cout << endl;
+    }
 }
